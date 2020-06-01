@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<!-- Production Project -->
+
+<!DOCTYPE project [
+    <!ENTITY relsim "v08_53_00">
+    <!ENTITY relreco "v08_53_00">
+    <!ENTITY file_type "mc">
+    <!ENTITY run_type "physics">
+    <!ENTITY name "mcc12_beam_cosmics">
+    <!ENTITY tag "mcc12.0">
+    ]>
+
+<job>
+
+<project name="&name;">
+
+<!-- Group -->
+<group>dune</group>
+
+<!-- Project size -->
+<numevents>1800</numevents>
+
+<!-- Operating System -->
+<os>SL7</os>
+
+<!-- Batch resources -->
+<resource>DEDICATED,OPPORTUNISTIC,OFFSITE</resource>
+
+<!-- metadata parameters -->
+
+<parameter name ="MCName">mcc12_protodune_beam_cosmics_p1GeV</parameter>
+<parameter name ="MCDetectorType">protoduneSP</parameter>
+<parameter name ="MCGenerators">CORSIKA</parameter>
+
+<!-- Larsoft information -->
+<larsoft>
+<tag>&relsim;</tag>
+<qual>e19:prof:py2</qual>
+<!-- uncomment if you want to use your local release-->
+<!--local>/pnfs/dune/resilient/users/wgu/j54a.tar</local--> 
+</larsoft>
+
+<stage name="g4">
+<fcl>mcc12_gen_protoDune_beam_cosmics_p1GeV.fcl</fcl>
+<!--fcl>protoDUNE_refactored_g4.fcl</fcl-->
+<!--fcl>protoDUNE_refactored_g4_sce_datadriven.fcl</fcl-->
+<fcl>protoDUNE_refactored_g4_stage1.fcl</fcl>
+<fcl>protoDUNE_refactored_g4_stage2_sce_datadriven.fcl</fcl>
+<fcl>protoDUNE_refactored_detsim_stage1.fcl</fcl>
+<fcl>protoDUNE_refactored_detsim_stage2.fcl</fcl>
+<!--fcl>protoDUNE_refactored_reco.fcl</fcl-->
+<fcl>protoDUNE_refactored_reco_35ms_sce_datadriven.fcl</fcl>
+<outdir>/pnfs/dune/scratch/users/wgu/&relsim;/g4/&name;</outdir>
+<workdir>/pnfs/dune/scratch/users/wgu/work/&relsim;/g4/&name;</workdir>
+<output>&name;_${PROCESS}_%tc_g4.root</output>
+<numjobs>180</numjobs>
+<jobsub>--memory=8GB --disk=30GB --append_condor_requirements='(TARGET.HAS_CVMFS_dune_opensciencegrid_org==true &amp;&amp; TARGET.HAS_CVMFS_dune_osgstorage_org==true )'</jobsub>
+<datatier>geant4-simulated</datatier>
+<defname>&name;_&tag;_g4</defname>
+</stage>
+
+
+<stage name="detsim">
+<inputlist>/pnfs/dune/scratch/users/wgu/&relsim;/g4/&name;/files.list</inputlist>
+<fcl>protoDUNE_refactored_detsim.fcl</fcl>
+<outdir>/pnfs/dune/scratch/users/wgu/&relsim;/detsim/&name;</outdir>
+<workdir>/pnfs/dune/scratch/users/wgu/work/&relsim;/detsim/&name;</workdir>
+<output>&name;_${PROCESS}_%tc_detsim.root</output>
+<numjobs>360</numjobs>
+<jobsub>--memory=8GB --append_condor_requirements='(TARGET.HAS_CVMFS_dune_opensciencegrid_org==true &amp;&amp; TARGET.HAS_CVMFS_dune_osgstorage_org==true &amp;&amp; (TARGET.GLIDEIN_Site isnt "BNL") &amp;&amp; (TARGET.GLIDEIN_Site isnt "Nebraska") &amp;&amp; (TARGET.GLIDEIN_Site isnt "SGrid") &amp;&amp; (TARGET.GLIDEIN_Site isnt "Lincoln") )'</jobsub>
+<datatier>detector-simulated</datatier>
+<defname>&name;_&tag;_detsim</defname>
+</stage>
+
+<stage name="reco">
+<inputlist>/pnfs/dune/scratch/users/wgu/&relsim;/detsim/&name;/files.list</inputlist>
+<fcl>protoDUNE_refactored_reco_35ms_sce_datadriven.fcl</fcl>
+<outdir>/pnfs/dune/scratch/users/wgu/&relreco;/reco/&name;</outdir>
+<workdir>/pnfs/dune/scratch/users/wgu/work/&relreco;/reco/&name;</workdir>
+<output>&name;_${PROCESS}_%tc_reco.root</output>
+<numjobs>360</numjobs>
+<datatier>full-reconstructed</datatier>
+<defname>&name;_&tag;_reco</defname>
+<jobsub>--memory=6000MB --append_condor_requirements='(TARGET.HAS_CVMFS_dune_opensciencegrid_org==true &amp;&amp; TARGET.HAS_CVMFS_dune_osgstorage_org==true &amp;&amp; (TARGET.GLIDEIN_Site isnt "BNL") &amp;&amp; (TARGET.GLIDEIN_Site isnt "Nebraska") &amp;&amp; (TARGET.GLIDEIN_Site isnt "SGrid") &amp;&amp; (TARGET.GLIDEIN_Site isnt "Lincoln") )'</jobsub>
+<schema>root</schema>
+</stage>
+
+<filetype>&file_type;</filetype>
+<runtype>&run_type;</runtype>
+</project>
+</job>
