@@ -7,7 +7,7 @@
     <!ENTITY relreco "v08_53_00">
     <!ENTITY file_type "mc">
     <!ENTITY run_type "physics">
-    <!ENTITY name "mcc12_beam_cosmics">
+    <!ENTITY name "mcc12_beam_cosmics_p7GeV">
     <!ENTITY tag "mcc12.0">
     ]>
 
@@ -29,7 +29,7 @@
 
 <!-- metadata parameters -->
 
-<parameter name ="MCName">mcc12_protodune_beam_cosmics_p1GeV</parameter>
+<parameter name ="MCName">mcc12_protodune_beam_cosmics_p7GeV</parameter>
 <parameter name ="MCDetectorType">protoduneSP</parameter>
 <parameter name ="MCGenerators">CORSIKA</parameter>
 
@@ -42,7 +42,7 @@
 </larsoft>
 
 <stage name="g4">
-<fcl>mcc12_gen_protoDune_beam_cosmics_p1GeV.fcl</fcl>
+<fcl>mcc12_gen_protoDune_beam_cosmics_p7GeV.fcl</fcl>
 <!--fcl>protoDUNE_refactored_g4.fcl</fcl-->
 <!--fcl>protoDUNE_refactored_g4_sce_datadriven.fcl</fcl-->
 <fcl>protoDUNE_refactored_g4_stage1.fcl</fcl>
